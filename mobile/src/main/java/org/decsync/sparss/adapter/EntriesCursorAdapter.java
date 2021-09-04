@@ -45,7 +45,6 @@
 
 package org.decsync.sparss.adapter;
 
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
@@ -71,8 +70,8 @@ import org.decsync.sparss.provider.FeedData.FeedColumns;
 import org.decsync.sparss.utils.CircleTransform;
 import org.decsync.sparss.utils.DB;
 import org.decsync.sparss.utils.NetworkUtils;
-import org.decsync.sparss.utils.StringUtils;
 import org.decsync.sparss.utils.PrefUtils;
+import org.decsync.sparss.utils.StringUtils;
 
 public class EntriesCursorAdapter extends ResourceCursorAdapter {
 
@@ -93,9 +92,9 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
     public void bindView(View view, final Context context, Cursor cursor) {
         if (view.getTag(R.id.holder) == null) {
             ViewHolder holder = new ViewHolder();
-            holder.titleTextView = (TextView) view.findViewById(android.R.id.text1);
-            holder.dateTextView = (TextView) view.findViewById(android.R.id.text2);
-            holder.authorTextView = (TextView) view.findViewById(R.id.author);
+            holder.titleTextView = (TextView) view.findViewById(R.id.titleText);
+            holder.sourceAuthorTextView = (TextView) view.findViewById(R.id.sourceAuthorText);
+            holder.dateTimeTextView = (TextView) view.findViewById(R.id.dateTimeText);
             holder.mainImgView = (ImageView) view.findViewById(R.id.main_icon);
             holder.starImgView = (ImageView) view.findViewById(R.id.favorite_icon);
             view.setTag(R.id.holder, holder);
@@ -106,13 +105,7 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
         String titleText = cursor.getString(mTitlePos);
         holder.titleTextView.setText(titleText);
 
-        String authorText = cursor.getString(mAuthorPos);
-        if(authorText == null || authorText.isEmpty()) {
-            holder.authorTextView.setVisibility(View.GONE);
-        } else {
-            holder.authorTextView.setText(authorText);
-            holder.authorTextView.setVisibility(View.VISIBLE);
-        }
+        holder.dateTimeTextView.setText(StringUtils.getDateTimeString(cursor.getLong(mDatePos)));
 
         final long feedId = cursor.getLong(mFeedIdPos);
         String feedName = cursor.getString(mFeedNamePos);
@@ -134,25 +127,26 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
 
         holder.starImgView.setVisibility(holder.isFavorite ? View.VISIBLE : View.INVISIBLE);
 
-        if (mShowFeedInfo && mFeedNamePos > -1) {
-            if (feedName != null) {
-                holder.dateTextView.setText(Html.fromHtml(new StringBuilder("<font color='#247ab0'>").append(feedName).append("</font>").append(Constants.COMMA_SPACE).append(StringUtils.getDateTimeString(cursor.getLong(mDatePos))).toString()));
-            } else {
-                holder.dateTextView.setText(StringUtils.getDateTimeString(cursor.getLong(mDatePos)));
-            }
+        String authorText = cursor.getString(mAuthorPos);
+        if (authorText == null || authorText.isEmpty()) {
+            holder.sourceAuthorTextView.setVisibility(View.INVISIBLE);
         } else {
-            holder.dateTextView.setText(StringUtils.getDateTimeString(cursor.getLong(mDatePos)));
+            if (mShowFeedInfo && mFeedNamePos > -1 && feedName != null) {
+                holder.sourceAuthorTextView.setText(Html.fromHtml(new StringBuilder("<font color='#247ab0'>").append(feedName).append("</font>").append(Constants.COMMA_SPACE).append(authorText).toString()));
+            } else {
+                holder.sourceAuthorTextView.setText(authorText);
+            }
         }
 
         if (cursor.isNull(mIsReadPos)) {
             holder.titleTextView.setEnabled(true);
-            holder.dateTextView.setEnabled(true);
-            holder.authorTextView.setEnabled(true);
+            holder.sourceAuthorTextView.setEnabled(true);
+            holder.dateTimeTextView.setEnabled(true);
             holder.isRead = false;
         } else {
             holder.titleTextView.setEnabled(false);
-            holder.dateTextView.setEnabled(false);
-            holder.authorTextView.setEnabled(false);
+            holder.sourceAuthorTextView.setEnabled(false);
+            holder.dateTimeTextView.setEnabled(false);
             holder.isRead = true;
         }
     }
@@ -165,12 +159,12 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
 
             if (holder.isRead) {
                 holder.titleTextView.setEnabled(false);
-                holder.dateTextView.setEnabled(false);
-                holder.authorTextView.setEnabled(false);
+                holder.sourceAuthorTextView.setEnabled(false);
+                holder.dateTimeTextView.setEnabled(false);
             } else {
                 holder.titleTextView.setEnabled(true);
-                holder.dateTextView.setEnabled(true);
-                holder.authorTextView.setEnabled(true);
+                holder.sourceAuthorTextView.setEnabled(true);
+                holder.dateTimeTextView.setEnabled(true);
             }
 
             new Thread() {
@@ -262,8 +256,8 @@ public class EntriesCursorAdapter extends ResourceCursorAdapter {
 
     private static class ViewHolder {
         public TextView titleTextView;
-        public TextView dateTextView;
-        public TextView authorTextView;
+        public TextView sourceAuthorTextView;
+        public TextView dateTimeTextView;
         public ImageView mainImgView;
         public ImageView starImgView;
         public boolean isRead, isFavorite;

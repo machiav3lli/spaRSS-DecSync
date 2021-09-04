@@ -1,67 +1,91 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="80dp">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="80dp"
+    android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/main_icon"
         android:layout_width="@dimen/entry_img_size"
         android:layout_height="@dimen/entry_img_size"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:scaleType="centerCrop"/>
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="10dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/titleText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:maxLines="4"
+        android:text="Title Place Holder"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textIsSelectable="false"
+        app:layout_constraintBottom_toTopOf="@id/feed_item_layout"
+        app:layout_constraintEnd_toStartOf="@id/favorite_icon"
+        app:layout_constraintStart_toEndOf="@id/main_icon"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/feed_item_layout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/main_icon"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/titleText"
+        app:layout_constraintTop_toBottomOf="@id/titleText">
 
         <TextView
-            android:id="@android:id/text1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawablePadding="3dp"
-            android:ellipsize="end"
-            android:gravity="top"
-            android:maxLines="4"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textIsSelectable="false"/>
-
-        <TextView
-            android:id="@android:id/text2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/sourceAuthorText"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:alpha="0.7"
-            android:drawablePadding="3dp"
+            android:gravity="center_vertical"
             android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textIsSelectable="false"/>
-
-        <TextView
-            android:id="@+id/author"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:alpha="0.7"
-            android:drawablePadding="3dp"
-            android:singleLine="true"
+            android:text="(SOURCE, )Author"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textIsSelectable="false"
-            android:text="placeholder feed item author" />
+            app:layout_constraintEnd_toStartOf="@id/dateTimeText"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/dateTimeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:alpha="0.7"
+            android:background="@drawable/round_background_accent"
+            android:drawablePadding="3dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="1dp"
+            android:singleLine="true"
+            android:text="30.02.2021 06:00"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="?android:colorBackground"
+            android:textIsSelectable="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/favorite_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/item_favorite"/>
+        android:src="@drawable/item_favorite"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
