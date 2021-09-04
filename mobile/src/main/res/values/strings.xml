@@ -45,6 +45,13 @@
     <string name="back_again_to_quit">Press back once more to exit</string>
     <string name="no_new_entries">No new entries to display</string>
     <string name="decsync_disabled">DecSync support disabled</string>
+    <string name="read_time_zero">Less then 1 min</string>
+    <plurals name="read_time">
+        <item quantity="one">%1$s min</item>
+        <item quantity="few"></item>
+        <item quantity="other">%1$s mins</item>
+    </plurals>
+
 
     <!-- IntroActivity -->
     <string name="title_activity_intro">Introduction</string>

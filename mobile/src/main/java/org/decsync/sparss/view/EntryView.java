@@ -179,16 +179,17 @@ public class EntryView extends WebView {
         content.append(TITLE_START).append(link).append(TITLE_MIDDLE).append(title).append(TITLE_END).append(SUBTITLE_START);
         Date date = new Date(timestamp);
         Context context = getContext();
-        StringBuilder dateStringBuilder = new StringBuilder(DateFormat.getLongDateFormat(context).format(date)).append(' ').append(
-                DateFormat.getTimeFormat(context).format(date));
+        int readTime = contentText.split("\\s+").length / Constants.WORDS_PER_MINUTE;
+        StringBuilder subtitleBuilder = new StringBuilder((author != null && !author.isEmpty()) ? String.format("<font color='#247ab0'>%s</font> | ", author) : "")
+                .append(DateFormat.getLongDateFormat(context).format(date))
+                .append(' ').append(DateFormat.getTimeFormat(context).format(date))
+                .append(String.format(", %s", readTime > 0 ?
+                        getResources().getQuantityString(R.plurals.read_time, readTime, readTime)
+                        : getResources().getString(R.string.read_time_zero)));
 
-        if (author != null && !author.isEmpty()) {
-            dateStringBuilder.append(" &mdash; ").append(author);
-        }
+        content.append(subtitleBuilder).append(SUBTITLE_END).append(contentText).append(BUTTON_SECTION_START);
 
-        content.append(dateStringBuilder).append(SUBTITLE_END).append(contentText).append(BUTTON_SECTION_START);
-
-               if (enclosure != null && enclosure.length() > 6 && !enclosure.contains(IMAGE_ENCLOSURE)) {
+        if (enclosure != null && enclosure.length() > 6 && !enclosure.contains(IMAGE_ENCLOSURE)) {
             content.append(BUTTON_START).append(context.getString(R.string.see_enclosure)).append(BUTTON_MIDDLE)
                     .append("injectedJSObject.onClickEnclosure();").append(BUTTON_END);
         }
